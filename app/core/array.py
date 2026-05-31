@@ -1,4 +1,7 @@
-class TrackedArray[T]:
+from app.core.base import BaseDataStructure
+
+
+class TrackedArray[T](BaseDataStructure):
     def __init__(self, size: int):
         """Init function of the array.
 
@@ -38,14 +41,32 @@ class TrackedArray[T]:
         """
         return False
 
-    def read(self) -> list[T | None]:
-        """Read function of the array.
+    def contains(self, value: T | None, index: int | None) -> bool:
+        """Check if a value is contained inside of the array.
 
-        Returns:
-            list of the generic array type
-
+        Arguments:
+            value: Generic typing of the value, optionally passed
+            index: Index location of the item to check if it exists
         """
-        return self._data.copy()
+        return False
+
+    def traversal(self, value: T | None, index: int | None) -> bool:
+        """Traversal of the array.
+
+        Arguments:
+            value: The value to be traversed to.
+            index: The index location of desired traversal.
+        """
+        return False
+
+    def display(self, value: T, index: int | None) -> list[T | None]:
+        """Display the array until the index given or value.
+
+        Arguments:
+            value: The value to be displayed to.
+            index: The index to be displayed to
+        """
+        return []
 
     @property
     def is_full(self) -> bool:

@@ -6,12 +6,12 @@ class ArrayConfig(BaseModel):
     inital_values: list[int] = []
 
 
-class ArrayOperation(BaseModel):
+class ArrayOperation[T](BaseModel):
     index: int
-    value: int | None = None
+    value: T | None = None
 
 
-class ArraStateResponse(BaseModel):
-    current_state: list[int | None]
+class ArraStateResponse[T](BaseModel):
+    current_state: list[T | None]
     last_operation: str
     is_full: bool

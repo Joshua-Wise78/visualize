@@ -2,6 +2,33 @@ from abc import ABC, abstractmethod
 
 
 class BaseDataStructure[T](ABC):
+    """The base structure outline each structure will need.
+
+    This is an outline and extra methods can be passed or just defaulted out.
+
+    Arguments:
+        ABC: The default abstraction method used to require defined functions
+    """
+
+    def __init__(self, size: int | None):
+        """Base definitions for all structures."""
+        if size is None:
+            # If the size is None aka Tree/Tries
+            self._data: list[T | None]
+        else:
+            # If the size is not none aka Array like structures
+            self._data: list[T | None] = [None] * size
+
+        self.size = size
+        self.last_action: str = "Initialized"
+
+    def _bounds_check(self, index: int) -> bool:
+        """Bounds check to see if size exists and is in bounds"""
+        if self.size is not None:
+            if index < 0 or index >= self.size:
+                raise IndexError("Index is out of bounds.")
+        return True
+
     @abstractmethod
     def insert(self, value: T, index: int | None) -> bool:
         """Add a value to the structure"""
