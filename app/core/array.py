@@ -1,18 +1,10 @@
 from app.core.base import BaseDataStructure
+from app.core.mixins import BoundsCheckMixin
 
 
-class TrackedArray[T](BaseDataStructure):
+class Array[T](BoundsCheckMixin, BaseDataStructure):
     def __init__(self, size: int):
-        """Init function of the array.
-
-        Arguments:
-            self: context of the array
-            size: The array size
-
-        """
-        self.size = size
-        self._data: list[T | None] = [None] * size
-        self.last_action: str = "Initalized"
+        super().__init__(size)
 
     def insert(self, index: int, value: T) -> bool:
         """Insertion function for the array.
@@ -22,11 +14,12 @@ class TrackedArray[T](BaseDataStructure):
             value: Generic typic of the value to be inserted.
 
         """
-        if index < 0 or index >= self.size:
-            raise IndexError("Inded out of bounds")
+        self._bounds_check(index)
+
+        if value is None:
+            raise ValueError("Value cannot be None.")
 
         self._data[index] = value
-        self.last_action = f"Inserted {value} at index {index}"
         return True
 
     def deletion(self, index: int) -> bool:
