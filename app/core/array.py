@@ -80,14 +80,25 @@ class StaticArray[T](BoundsCheckMixin, BaseDataStructure):
 
         return True
 
-    def display(self, value: T, index: int | None) -> list[T | None]:
+    def display(self, value: T, index: int | None) -> bool:
         """Display the array until the index given or value.
 
         Arguments:
             value: The value to be displayed to.
             index: The index to be displayed to
         """
-        return []
+        if not self.size:
+            return False
+
+        if index is not None:
+            self._bounds_check(index)
+            for i in range(index + 1):
+                print(str(value))
+
+        for i in range(self.size):
+            print(str(self._data[i]))
+
+        return True
 
     @property
     def is_full(self) -> bool:

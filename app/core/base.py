@@ -22,13 +22,6 @@ class BaseDataStructure[T](ABC):
         self.size = size
         self.last_action: str = "Initialized"
 
-    def _bounds_check(self, index: int) -> bool:
-        """Bounds check to see if size exists and is in bounds"""
-        if self.size is not None:
-            if index < 0 or index >= self.size:
-                raise IndexError("Index is out of bounds.")
-        return True
-
     @abstractmethod
     def insert(self, value: T, index: int | None) -> bool:
         """Add a value to the structure"""
@@ -50,6 +43,6 @@ class BaseDataStructure[T](ABC):
         pass
 
     @abstractmethod
-    def display(self, value: T, index: int | None) -> list[T | None]:
+    def display(self, value: T, index: int | None):
         """Display the structure to the console"""
         pass

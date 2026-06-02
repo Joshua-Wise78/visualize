@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
 
-class ArrayConfig(BaseModel):
+class ArrayBase[T](BaseModel):
     size: int
-    inital_values: list[int] = []
+    initial_value: list[T | None] = []
 
 
 class ArrayOperation[T](BaseModel):
@@ -11,7 +11,7 @@ class ArrayOperation[T](BaseModel):
     value: T | None = None
 
 
-class ArraStateResponse[T](BaseModel):
+class ArrayStateResponse[T](BaseModel):
     current_state: list[T | None]
     last_operation: str
     is_full: bool
