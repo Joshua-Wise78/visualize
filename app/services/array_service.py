@@ -1,7 +1,8 @@
 import json
 import uuid
+from typing import Any
+
 from app.core.array import StaticArray
-from app.core.exceptions import StructuredOutOfBoundsError
 
 
 class ArrayService:
@@ -16,17 +17,39 @@ class ArrayService:
             if i < size:
                 target_array.insert(i, val)
 
-        # Database saving logic will go here
-
+        self._save_to_db(array_id, target_array)
         return array_id, target_array
 
-    def insert_value(self, array_id: str, index: int, value: any) -> StaticArray:
-        # This will change mainly just to make the errors go away.
-        target_array = StaticArray(index)
+    def insert_value(self, array_id: str, index: int, value: Any) -> StaticArray:
+
+        target_array = self._load_from_db(array_id)
+        target_array.insert(index=index, value=value)
+        target_array.last_action = f"Inserted {value} at index: {index}"
+
+        self._save_to_db(array_id, target_array)
+
         return target_array
 
-    def _save_to_db(self):
-        pass
+    def _save_to_db(self, array_id: str, array_obj: StaticArray):
+        state_dict = {
+            "size": array_obj.size,
+            "_data": array_obj._data,
+            "last_action": array_obj.last_action,
+        }
 
-    def _load_from_db(self):
-        pass
+        json_string = json.dumps(state_dict)
+        self.db.save(array_id, json_string)
+
+    def _load_from_db(self, array_id: str) -> StaticArray:
+        raw_data = self.db.get(array_id)
+
+        if not raw_data:
+            raise ValueError(f"Array {array_id} not found in database")
+
+        state_dict = json.loads(raw_data)
+
+        reconstructed_array = StaticArray(size=state_dict["size"])
+        reconstructed_array._data = state_dict["_data"]
+        reconstructed_array.last_action = state_dict["last_action"]
+
+        return reconstructed_array

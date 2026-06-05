@@ -39,6 +39,6 @@ def read_root(request: Request):
     """The default root call to check for server health & status"""
     return {
         "message": "Hello",
-        "env": settings.enviorment,
+        "env": settings.environment,
         "allowed": host_list,
     }
