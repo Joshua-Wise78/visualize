@@ -1,3 +1,8 @@
+"""Base module that defines data structures.
+
+Author: Joshua Wise
+"""
+
 from abc import ABC, abstractmethod
 
 
@@ -8,10 +13,11 @@ class BaseDataStructure[T](ABC):
 
     Arguments:
         ABC: The default abstraction method used to require defined functions
+
     """
 
     def __init__(self, size: int | None):
-        """Base definitions for all structures."""
+        """Init for data structure."""
         if size is None:
             # If the size is None aka Tree/Tries
             self._data: list[T | None]
@@ -24,25 +30,25 @@ class BaseDataStructure[T](ABC):
 
     @abstractmethod
     def insert(self, value: T, index: int | None) -> bool:
-        """Add a value to the structure"""
+        """Add a value to the structure."""
         pass
 
     @abstractmethod
     def deletion(self, index: int, value: T | None) -> bool:
-        """Delete a value from the structure"""
+        """Delete a value from the structure."""
         pass
 
     @abstractmethod
     def contains(self, value: T | None, index: int | None) -> bool:
-        """Contain method for the structure"""
+        """Contain method for the structure."""
         pass
 
     @abstractmethod
     def traversal(self, value: T | None, index: int | None) -> bool:
-        """Traverse the structure for ease of user later"""
+        """Traverse the structure for ease of user later."""
         pass
 
     @abstractmethod
     def display(self, value: T, index: int | None):
-        """Display the structure to the console"""
+        """Display the structure to the console."""
         pass

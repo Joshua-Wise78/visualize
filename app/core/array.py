@@ -1,18 +1,31 @@
+"""Array core operations.
+
+Author: Joshua Wise
+"""
+
 from app.core.base import BaseDataStructure
 from app.core.mixins import BoundsCheckMixin
+from exceptions import ArgumentualError
 
 
-class StaticArray[T](BoundsCheckMixin, BaseDataStructure):
+class StaticArray[T](BoundsCheckMixin, BaseDataStructure[T]):
+    """Static array class to handle array data structures."""
+
     def __init__(self, size: int):
+        """Make a new StaticArray object."""
         super().__init__(size)
 
-    def insert(self, index: int, value: T) -> bool:
-        """Insertion function for the array.
+    def insert(self, value: T | None, index: int | None) -> bool:
+        """Insert value into array.
 
         Arguments:
-            index: The index place to be inserted.
-            value: Generic typic of the value to be inserted.
+            index: the index location
+            value: generic typing of the value to be inserted
+
         """
+        if index is None:
+            raise ValueError("Index cannot be None for StaticArray insertion")
+
         self._bounds_check(index)
 
         if value is None:
@@ -21,38 +34,49 @@ class StaticArray[T](BoundsCheckMixin, BaseDataStructure):
         self._data[index] = value
         return True
 
-    def deletion(self, index: int) -> bool:
-        """Deletion function for the array.
+    def deletion(self, index: int, value: T | None) -> bool:
+        """Delete a value from the array.
 
         Arguments:
             index: Location of deletion
+            value: The value to be inserted
 
         Returns:
             boolean of true or false depending on deletion
+
         """
         if self._bounds_check(index):
             self._data[index] = None
         return True
 
     def get_value(self, index: int) -> T | None:
-        """Get a value from the index
+        """Get a value from the index.
 
         Arguments:
             index: Location of the value
 
         Returns:
             Value from the array
+
         """
         self._bounds_check(index)
         return self._data[index]
 
-    def contains(self, value: T) -> bool:
+    def contains(self, value: T | None, index: int | None) -> bool:
         """Check if a value is contained inside of the array.
 
         Arguments:
             value: Generic typing of the value, optionally passed
+            index: Index location of the value
+
         """
+        if value is None and index is None:
+            raise ArgumentualError("Must pass at least value or index for contains.")
+
         if value in self._data:
+            return True
+
+        if index and self._data[index]:
             return True
 
         return False
@@ -66,6 +90,7 @@ class StaticArray[T](BoundsCheckMixin, BaseDataStructure):
         Arguments:
             value: The value to be traversed to.
             index: The index location of desired traversal.
+
         """
         if not self.size:
             return False
@@ -98,6 +123,7 @@ class StaticArray[T](BoundsCheckMixin, BaseDataStructure):
         Arguments:
             value: The value to be displayed to.
             index: The index to be displayed to
+
         """
         if not self.size:
             return False
