@@ -34,6 +34,18 @@ class StaticArray[T](BoundsCheckMixin, BaseDataStructure):
             self._data[index] = None
         return True
 
+    def get_value(self, index: int) -> T | None:
+        """Get a value from the index
+
+        Arguments:
+            index: Location of the value
+
+        Returns:
+            Value from the array
+        """
+        self._bounds_check(index)
+        return self._data[index]
+
     def contains(self, value: T) -> bool:
         """Check if a value is contained inside of the array.
 
