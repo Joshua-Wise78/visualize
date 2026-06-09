@@ -49,6 +49,6 @@ class BaseDataStructure[T](ABC):
         pass
 
     @abstractmethod
-    def display(self, value: T, index: int | None):
+    def display(self, value: T, index: int | None) -> bool:
         """Display the structure to the console."""
         pass

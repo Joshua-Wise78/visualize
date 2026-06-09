@@ -1,3 +1,5 @@
+"""Array routers handles http request."""
+
 from fastapi import APIRouter, Path, Query
 from app.models.array import ArrayOperation, ArrayBase, ArrayStateResponse
 
@@ -13,6 +15,7 @@ def create_array(config: ArrayBase):
 
     Returns:
         Static Array and its unique ID identifier.
+
     """
     pass
 
@@ -27,6 +30,7 @@ def insert_value(operation: ArrayOperation, array_id: str = Path(...)):
 
     Returns:
         Modified array with new value
+
     """
     pass
 
@@ -41,6 +45,7 @@ def delete_value(array_id: str = Path(...), index: int = Path(...)):
 
     Returns:
         Static Array that has been modified.
+
     """
     pass
 
@@ -58,18 +63,20 @@ def contain_value(
 
     Returns:
         True/False depending on if it is contained or not.
+
     """
     pass
 
 
 @router.get("/{array_id}/display", response_model=ArrayStateResponse)
 def display_array(array_id: str = Path(...)):
-    """Display the static array nicely to the terminal
+    """Display the static array nicely to the terminal.
 
     Arguments:
         array_id: The id of said array
 
     Returns:
         Printout of the array
+
     """
     pass
