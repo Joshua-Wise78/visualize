@@ -5,7 +5,7 @@ Author: Joshua Wise
 
 from app.core.base import BaseDataStructure
 from app.core.mixins import BoundsCheckMixin
-from exceptions import ArgumentualError
+from app.core.exceptions import ArgumentualError
 
 
 class StaticArray[T](BoundsCheckMixin, BaseDataStructure[T]):

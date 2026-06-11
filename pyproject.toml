@@ -1,7 +1,7 @@
 [project]
 name = "visualize"
 version = "0.1.0"
-description = "Add your description here"
+description = "Visualize datastructures inside of the terminal!"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -9,4 +9,9 @@ dependencies = [
     "pydantic-settings>=2.14.1",
     "pytest>=9.0.3",
     "slowapi>=0.1.9",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
 ]

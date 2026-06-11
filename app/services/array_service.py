@@ -35,7 +35,7 @@ class ArrayService:
 
         for i, val in enumerate(initial_value):
             if i < size:
-                target_array.insert(i, val)
+                target_array.insert(value=val, index=i)
 
         self._save_to_db(array_id, target_array)
         return array_id, target_array
