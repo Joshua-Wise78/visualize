@@ -52,3 +52,38 @@ def test_create_array(array_service: ArrayService, db_client: InMemoryStorage):
     parsed_data = json.loads(raw_db_data)
     assert parsed_data["size"] == 5
     assert parsed_data["_data"][0] == "apple"
+
+
+def test_insert(array_service: ArrayService, db_client: InMemoryStorage):
+    """Test insertion of array and validate the database client."""
+    array_id, _ = array_service.create_array(3, ["first"])
+
+    updated_array = array_service.insert_value(array_id, index=1, value="second")
+
+    assert updated_array.get_value(1) == "second"
+    assert "Inserted second at index: 1" in updated_array.last_action
+
+    db_data = db_client.get(array_id)
+
+    assert db_data is not None
+
+    parsed_data = json.loads(db_data)
+    assert parsed_data["_data"][1] == "second"
+    assert parsed_data["last_action"] == "Inserted second at index: 1"
+
+
+def test_deletion(array_service: ArrayService, db_client: InMemoryStorage):
+    array_id, _ = array_service.create_array(3, ["first", "second", "third"])
+
+    updated_array = array_service.delete_value(array_id, 1)
+
+    assert updated_array.get_value(1) is None
+    assert "Deleted second at index: 1" in updated_array.last_action
+
+    db_data = db_client.get(array_id)
+
+    assert db_data is not None
+
+    parsed_data = json.loads(db_data)
+    assert parsed_data["_data"][1] is None
+    assert parsed_data["last_action"] == "Deleted second at index: 1"
