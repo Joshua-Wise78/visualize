@@ -14,9 +14,16 @@ class Node[T]:
 class DoublyLinkedList[T]:
     """The doubly linted list class."""
 
-    def __init__(self):
+    def __init__(self, value: T, next: Node, prev: Node):
         """Create a doubly linked list."""
-        pass
+        self.header = Node[T | None](None)
+        self.tail = Node[T | None](None)
+
+        # Link sentinels
+        self.header.next = self.tail
+        self.tail.prev = self.header
+
+        self.size = 0
 
     def insert(self, value: T, index: int | None = None) -> None:
         """Insert a value inside of the doubly linked list."""
