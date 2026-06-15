@@ -34,6 +34,7 @@ class DoublyLinkedList[T]:
             value: The value of the new node.
             predecessor: The previous node.
             successor: The next node in line.
+
         """
         node = Node[T | None](value)
 
@@ -51,6 +52,7 @@ class DoublyLinkedList[T]:
         Arguments:
             value: The value to be inserted
             index: Optional value to insert mid list instead of appending.
+
         """
         if index is None or index >= self.size:
             assert self.tail.prev is not None
@@ -81,23 +83,85 @@ class DoublyLinkedList[T]:
             index: Optional int value of the node location
 
         """
-        if index is None or index >= self.size:
-            assert self.tail.prev is not None
+        if index is not None:
+            if index < 0 or index >= self.size:
+                raise IndexError("Index out of bounds")
+
+            current = self.header.next
+
+            for _ in range(index):
+                assert current is not None
+                current = current.next
+
+            assert current is not None
+            assert current.prev is not None
+            assert current.next is not None
+
+            current.prev.next = current.next
+            current.next.prev = current.prev
+            self.size -= 1
             return
 
-        if index < 0:
-            index = 0
+        if value is not None:
+            current = self.header.next
 
-        current: Node[T | None] | None = self.header.next
+            while current is not self.tail and current is not None:
+                if current.value == value:
+                    assert current.prev is not None
+                    assert current.next is not None
 
-        for _ in range(index):
-            if current is not None:
+                    current.prev.next = current.next
+                    current.next.prev = current.prev
+                    self.size -= 1
+                    return
+
                 current = current.next
 
     def get_node(self, value: T, index: int | None = None):
         """Get a node from the doubly linked list."""
-        pass
+        if index is not None:
+            if index < 0 or index >= self.size:
+                raise IndexError("Index out of bounds.")
+
+            current = self.header.next
+
+            for _ in range(index):
+                assert current is not None
+                current = current.next
+
+            assert current is not None
+            assert current.prev is not None
+            assert current.next is not None
+
+            return current
+
+        if value is not None:
+            current = self.header.next
+
+            while current is not self.tail and current is not None:
+                if current.value == value:
+                    return current
+
+                current = current.next
+
+        return None
 
     def traversal(self, index: int | None = None):
         """Traverse the doubly linked list."""
-        pass
+        if index is not None:
+            if index < 0 or index >= self.size:
+                raise IndexError("Index out of bounds.")
+
+            current = self.header.next
+
+            for _ in range(index):
+                assert current is not None
+                current = current.next
+
+                # TODO Add some function here for the traversal
+
+        current = self.header.next
+
+        while current is not self.tail and current is not None:
+            # TODO Some method here for some function
+            current = current.next
