@@ -14,7 +14,7 @@ class Node[T]:
 class DoublyLinkedList[T]:
     """The doubly linted list class."""
 
-    def __init__(self, value: T, next: Node, prev: Node):
+    def __init__(self):
         """Create a doubly linked list."""
         self.header = Node[T | None](None)
         self.tail = Node[T | None](None)
@@ -26,7 +26,12 @@ class DoublyLinkedList[T]:
         self.size = 0
 
     def insert(self, value: T, index: int | None = None) -> None:
-        """Insert a value inside of the doubly linked list."""
+        """Insert a value inside of the doubly linked list.
+
+        Arguments:
+            value: The value to be inserted
+            index: Optional value to insert mid list instead of appending.
+        """
         pass
 
     def delete(self, value: T, index: int | None = None) -> None:
@@ -44,5 +49,14 @@ class DoublyLinkedList[T]:
     def _insert_between(
         self, value: T, predecessor: Node[T], successor: Node[T]
     ) -> None:
-        """Univeral Helper method that will handle pointer logic."""
-        pass
+        """Univeral Helper method that will handle pointer logic.
+
+        Arguments:
+            value: The value of the new node.
+            predecessor: The previous node.
+            successor: The next node in line.
+        """
+        node = Node(value, prev=predecessor, next=successor)
+        predecessor.next = node
+        successor.prev = node
+        self.size = self.size + 1
