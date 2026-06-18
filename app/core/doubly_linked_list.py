@@ -1,10 +1,13 @@
 """Linked list core data structure."""
 
+from collections.abc import Iterable, Iterator
+from typing import cast
+
 
 class Node[T]:
     """Node class for the dynamic linked list."""
 
-    def __init__(self, value: T):
+    def __init__(self, value: T) -> None:
         """Create a node."""
         self.value: T = value
         self.next: Node[T] | None = None
@@ -14,29 +17,37 @@ class Node[T]:
 class DoublyLinkedList[T]:
     """The doubly linted list class."""
 
-    def __init__(self):
+    def __init__(self, iterable: Iterable[T] | None = None) -> None:
         """Create a doubly linked list."""
-        self.header = Node[T | None](None)
-        self.tail = Node[T | None](None)
+        self.header: Node[T] = cast(Node[T], Node(None))
+        self.tail: Node[T] = cast(Node[T], Node(None))
 
         # Link sentinels
         self.header.next = self.tail
         self.tail.prev = self.header
 
-        self.size = 0
+        self._size = 0
+
+        if iterable is not None:
+            for item in iterable:
+                self.append(item)
+
+    def __len__(self) -> int:
+        """Return the current number of nodes in the list."""
+        return self._size
+
+    def __iter__(self) -> Iterator[T]:
+        """Make native Python iteration over the linked list."""
+        current = self.header.next
+        while current is not None and current is not self.tail:
+            yield current.value
+            current = current.next
 
     def _insert_between(
-        self, value: T, predecessor: Node[T | None], successor: Node[T | None]
+        self, value: T, predecessor: Node[T], successor: Node[T]
     ) -> None:
-        """Univeral Helper method that will handle pointer logic.
-
-        Arguments:
-            value: The value of the new node.
-            predecessor: The previous node.
-            successor: The next node in line.
-
-        """
-        node = Node[T | None](value)
+        """Universal helper method that handles pointer logic."""
+        node = Node[T](value)
 
         node.prev = predecessor
         node.next = successor
@@ -44,83 +55,84 @@ class DoublyLinkedList[T]:
         predecessor.next = node
         successor.prev = node
 
-        self.size += 1
+        self._size += 1
 
-    def insert(self, value: T, index: int | None = None) -> None:
-        """Insert a value inside of the doubly linked list.
+    def append(self, value: T) -> None:
+        """Add a value to the end of the doubly linked list.
 
-        Arguments:
-            value: The value to be inserted
-            index: Optional value to insert mid list instead of appending.
+        Args:
+            value: The value that will be inserted
 
         """
-        if index is None or index >= self.size:
-            assert self.tail.prev is not None
-            self._insert_between(
-                value, predecessor=self.tail.prev, successor=self.tail
-            )
+        assert self.tail.prev is not None
+        self._insert_between(
+            value, predecessor=self.tail.prev, successor=self.tail
+        )
+
+    def insert(self, index: int, value: T) -> None:
+        """Insert some value at a specific index."""
+        if index < 0:
+            index = max(0, index + self._size)
+
+        if index >= self._size:
+            self.append(value)
             return
 
-        if index < 0:
-            index = 0
-
-        current: Node[T | None] | None = self.header.next
-
+        current = self.header.next
         for _ in range(index):
-            if current is not None:
-                current = current.next
+            assert current is not None
+            current = current.next
 
         assert current is not None
         assert current.prev is not None
 
         self._insert_between(value, predecessor=current.prev, successor=current)
 
-    def delete(self, value: T, index: int | None = None) -> None:
-        """Delete a value inside of the doubly linked list.
+    def pop(self, index: int = -1) -> T:
+        if self._size == 0:
+            raise IndexError("Cannot pop from empty list.")
 
-        Arguments:
-            value: The value to be deleted
-            index: Optional int value of the node location
+        if index < 0:
+            index += self._size
 
-        """
-        if index is not None:
-            if index < 0 or index >= self.size:
-                raise IndexError("Index out of bounds")
+        if index < 0 or index >= self._size:
+            raise IndexError("Index out of bounds.")
 
-            current = self.header.next
-
-            for _ in range(index):
-                assert current is not None
-                current = current.next
-
+        current = self.header.next
+        for _ in range(index):
             assert current is not None
-            assert current.prev is not None
-            assert current.next is not None
+            current = current.next
 
-            current.prev.next = current.next
-            current.next.prev = current.prev
-            self.size -= 1
-            return
+        assert current is not None
+        assert current.prev is not None
+        assert current.next is not None
 
-        if value is not None:
-            current = self.header.next
+        current.prev.next = current.next
+        current.next.prev = current.prev
+        self._size -= 1
 
-            while current is not self.tail and current is not None:
-                if current.value == value:
-                    assert current.prev is not None
-                    assert current.next is not None
+        return current.value
 
-                    current.prev.next = current.next
-                    current.next.prev = current.prev
-                    self.size -= 1
-                    return
+    def remove(self, value: T) -> None:
+        current = self.header.next
 
-                current = current.next
+        while current is not None and current is not self.tail:
+            if current.value == value:
+                assert current.prev is not None
+                assert current.next is not None
+
+                current.prev.next = current.next
+                current.next.prev = current.prev
+                self._size -= 1
+                return
+            current = current.next
+
+        raise ValueError(f"{value} not in the list.")
 
     def get_node(self, value: T, index: int | None = None):
         """Get a node from the doubly linked list."""
         if index is not None:
-            if index < 0 or index >= self.size:
+            if index < 0 or index >= self._size:
                 raise IndexError("Index out of bounds.")
 
             current = self.header.next
@@ -149,7 +161,7 @@ class DoublyLinkedList[T]:
     def traversal(self, index: int | None = None):
         """Traverse the doubly linked list."""
         if index is not None:
-            if index < 0 or index >= self.size:
+            if index < 0 or index >= self._size:
                 raise IndexError("Index out of bounds.")
 
             current = self.header.next
