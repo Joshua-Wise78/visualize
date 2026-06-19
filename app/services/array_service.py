@@ -10,16 +10,16 @@ from typing import Any
 from app.core.array import StaticArray
 
 
-class ArrayService:
+class ArrayService[T]:
     """The array service that handles the array operations."""
 
-    def __init__(self, db_client: Any):
+    def __init__(self, db_client: Any) -> None:
         """Init the ArrayService."""
         self.db = db_client
 
     def create_array(
-        self, size: int, initial_value: list[Any]
-    ) -> tuple[str, StaticArray[Any]]:
+        self, size: int, initial_value: list[T]
+    ) -> tuple[str, StaticArray[T]]:
         """Create array with size, value and stored as a tuple.
 
         Arguments:
@@ -31,7 +31,7 @@ class ArrayService:
 
         """
         array_id = str(uuid.uuid4())
-        target_array = StaticArray[Any](size)
+        target_array = StaticArray[T](size)
 
         for i, val in enumerate(initial_value):
             if i < size:
@@ -40,7 +40,9 @@ class ArrayService:
         self._save_to_db(array_id, target_array)
         return array_id, target_array
 
-    def insert_value(self, array_id: str, index: int, value: Any) -> StaticArray[Any]:
+    def insert_value(
+        self, array_id: str, index: int, value: T
+    ) -> StaticArray[T]:
         """Insert value into the array.
 
         Arguments:
@@ -59,7 +61,7 @@ class ArrayService:
 
         return target_array
 
-    def delete_value(self, array_id: str, index: int) -> StaticArray[Any]:
+    def delete_value(self, array_id: str, index: int) -> StaticArray[T]:
         """Delete a value from the array.
 
         Arguments:
@@ -80,7 +82,7 @@ class ArrayService:
         self._save_to_db(array_id, target_array)
         return target_array
 
-    def _save_to_db(self, array_id: str, array_obj: StaticArray[Any]):
+    def _save_to_db(self, array_id: str, array_obj: StaticArray[T]) -> None:
         """Save the array to the database.
 
         Arguments:
@@ -97,7 +99,7 @@ class ArrayService:
         json_string = json.dumps(state_dict)
         self.db.save(array_id, json_string)
 
-    def _load_from_db(self, array_id: str) -> StaticArray[Any]:
+    def _load_from_db(self, array_id: str) -> StaticArray[T]:
         """Load the array from the database.
 
         Arguments:
@@ -114,7 +116,7 @@ class ArrayService:
 
         state_dict = json.loads(raw_data)
 
-        reconstructed_array = StaticArray[Any](size=state_dict["size"])
+        reconstructed_array = StaticArray[T](size=state_dict["size"])
         reconstructed_array._data = state_dict["_data"]
         reconstructed_array.last_action = state_dict["last_action"]
 

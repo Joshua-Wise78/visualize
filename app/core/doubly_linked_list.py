@@ -89,6 +89,12 @@ class DoublyLinkedList[T]:
         self._insert_between(value, predecessor=current.prev, successor=current)
 
     def pop(self, index: int = -1) -> T:
+        """Pop a node off from the middle of the doubly linked list.
+
+        Args:
+            index: The location of the node to be 'poped' Defaults to -1
+
+        """
         if self._size == 0:
             raise IndexError("Cannot pop from empty list.")
 
@@ -114,6 +120,12 @@ class DoublyLinkedList[T]:
         return current.value
 
     def remove(self, value: T) -> None:
+        """Remove a node using the value param.
+
+        Args:
+            value: The value to be removed
+
+        """
         current = self.header.next
 
         while current is not None and current is not self.tail:
@@ -129,8 +141,14 @@ class DoublyLinkedList[T]:
 
         raise ValueError(f"{value} not in the list.")
 
-    def get_node(self, value: T, index: int | None = None):
-        """Get a node from the doubly linked list."""
+    def get_node(self, value: T, index: int | None = None) -> Node[T]:
+        """Get a node from the doubly linked list.
+
+        Args:
+            value: The value of the node.
+            index: The index location of the node optional
+
+        """
         if index is not None:
             if index < 0 or index >= self._size:
                 raise IndexError("Index out of bounds.")
@@ -156,10 +174,15 @@ class DoublyLinkedList[T]:
 
                 current = current.next
 
-        return None
+        raise ValueError("Node not found.")
 
-    def traversal(self, index: int | None = None):
-        """Traverse the doubly linked list."""
+    def traversal(self, index: int | None = None) -> None:
+        """Traverse through the doubly linked list to do something.
+
+        Args:
+            index: The optional index location of where to traverse up to.
+
+        """
         if index is not None:
             if index < 0 or index >= self._size:
                 raise IndexError("Index out of bounds.")

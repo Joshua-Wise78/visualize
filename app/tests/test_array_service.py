@@ -1,11 +1,13 @@
 """Test Array features."""
 
 import json
+from typing import Any
+
 import pytest
 
 from app.core.array import StaticArray
-from app.services.array_service import ArrayService
 from app.core.database import InMemoryStorage
+from app.services.array_service import ArrayService
 
 
 @pytest.fixture
@@ -20,7 +22,7 @@ def db_client() -> InMemoryStorage:
 
 
 @pytest.fixture
-def array_service(db_client: InMemoryStorage) -> ArrayService:
+def array_service(db_client: InMemoryStorage) -> ArrayService[Any]:
     """Array service init.
 
     Returns:
@@ -30,7 +32,9 @@ def array_service(db_client: InMemoryStorage) -> ArrayService:
     return ArrayService(db_client)
 
 
-def test_create_array(array_service: ArrayService, db_client: InMemoryStorage):
+def test_create_array(
+    array_service: ArrayService[Any], db_client: InMemoryStorage
+) -> None:
     """Test the create array and basic functionallity for it."""
     size = 5
     initial_values = ["apple", "banana", "cherry"]
@@ -53,11 +57,15 @@ def test_create_array(array_service: ArrayService, db_client: InMemoryStorage):
     assert parsed_data["_data"][0] == "apple"
 
 
-def test_insert(array_service: ArrayService, db_client: InMemoryStorage):
+def test_insert(
+    array_service: ArrayService[Any], db_client: InMemoryStorage
+) -> None:
     """Test insertion of array and validate the database client."""
     array_id, _ = array_service.create_array(3, ["first"])
 
-    updated_array = array_service.insert_value(array_id, index=1, value="second")
+    updated_array = array_service.insert_value(
+        array_id, index=1, value="second"
+    )
 
     assert updated_array.get_value(1) == "second"
     assert "Inserted second at index: 1" in updated_array.last_action
@@ -71,7 +79,9 @@ def test_insert(array_service: ArrayService, db_client: InMemoryStorage):
     assert parsed_data["last_action"] == "Inserted second at index: 1"
 
 
-def test_deletion(array_service: ArrayService, db_client: InMemoryStorage):
+def test_deletion(
+    array_service: ArrayService[Any], db_client: InMemoryStorage
+) -> None:
     """Test deletion of values for array_service."""
     array_id, _ = array_service.create_array(3, ["first", "second", "third"])
 
@@ -89,13 +99,13 @@ def test_deletion(array_service: ArrayService, db_client: InMemoryStorage):
     assert parsed_data["last_action"] == "Deleted second at index: 1"
 
 
-def test_load_nonexistent_array(array_service: ArrayService):
+def test_load_nonexistent_array(array_service: ArrayService[Any]) -> None:
     """Test loading a non-existent array from the database."""
     with pytest.raises(ValueError, match="not found in database"):
         array_service._load_from_db("fake-uuid-9000")
 
 
-def test_get_value(array_service: ArrayService):
+def test_get_value(array_service: ArrayService[Any]) -> None:
     """Test Getting a value that does and doesn't exist."""
     array_id, target_array = array_service.create_array(3, ["first", "second"])
 
@@ -106,14 +116,18 @@ def test_get_value(array_service: ArrayService):
     assert target_array.get_value(2) is None
 
 
-def test_multi_type_array(array_service: ArrayService, db_client: InMemoryStorage):
+def test_multi_type_array(
+    array_service: ArrayService[Any], db_client: InMemoryStorage
+) -> None:
     """Test an array with multiple data types."""
     array_id, _ = array_service.create_array(4, [])
 
     array_service.insert_value(array_id, index=0, value=42)  # Integer
     array_service.insert_value(array_id, index=1, value="hello world")  # String
     array_service.insert_value(array_id, index=2, value=3.14159)  # Float
-    array_service.insert_value(array_id, index=3, value={"status": "ok"})  # Dictionary
+    array_service.insert_value(
+        array_id, index=3, value={"status": "ok"}
+    )  # Dictionary
 
     raw_db_data = db_client.get(array_id)
 
@@ -129,7 +143,7 @@ def test_multi_type_array(array_service: ArrayService, db_client: InMemoryStorag
     assert "Inserted {'status': 'ok'} at index: 3" in parsed_data["last_action"]
 
 
-def test_out_of_bounds(array_service: ArrayService):
+def test_out_of_bounds(array_service: ArrayService[Any]) -> None:
     """Test out of bounds operations for array."""
     array_id, _ = array_service.create_array(3, ["a", "b", "c"])
 

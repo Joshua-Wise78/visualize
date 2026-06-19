@@ -3,17 +3,21 @@
 Author: Joshua Wise
 """
 
-from app.core.base import BaseDataStructure
-from app.core.mixins import BoundsCheckMixin
 from app.core.exceptions import ArgumentualError
+from app.core.mixins import BoundsCheckMixin
 
 
-class StaticArray[T](BoundsCheckMixin, BaseDataStructure[T]):
+class StaticArray[T](BoundsCheckMixin):
     """Static array class to handle array data structures."""
 
-    def __init__(self, size: int):
+    def __init__(self, size: int) -> None:
         """Make a new StaticArray object."""
-        super().__init__(size)
+        if size < 0:
+            raise ValueError("Static Array cannpt be negative.")
+
+        self._data: list[T | None] = [None] * size
+        self.size: int = size
+        self.last_action: str = "Initialized"
 
     def insert(self, value: T | None, index: int | None) -> bool:
         """Insert value into array.
@@ -71,7 +75,9 @@ class StaticArray[T](BoundsCheckMixin, BaseDataStructure[T]):
 
         """
         if value is None and index is None:
-            raise ArgumentualError("Must pass at least value or index for contains.")
+            raise ArgumentualError(
+                "Must pass at least value or index for contains."
+            )
 
         if value in self._data:
             return True
