@@ -26,6 +26,8 @@ class DoublyLinkedList[T]:
         self.header.next = self.tail
         self.tail.prev = self.header
 
+        self.last_action: str = "Initialized"
+
         self._size = 0
 
         if iterable is not None:
