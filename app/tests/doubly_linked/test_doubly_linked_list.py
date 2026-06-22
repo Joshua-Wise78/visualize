@@ -34,7 +34,8 @@ def test_insert(populated_doubly_linked_list: DoublyLinkedList[str]) -> None:
     """Test inserting values at specific indices."""
     # Insert at beginning
     populated_doubly_linked_list.insert(0, "zero")
-    assert list(populated_doubly_linked_list)[0] == "zero"
+    assert next(iter(populated_doubly_linked_list)) == "zero"
+    # assert list(populated_doubly_linked_list)[0] == "zero"
 
     # Insert in middle
     populated_doubly_linked_list.insert(2, "one-and-a-half")

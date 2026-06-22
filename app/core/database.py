@@ -7,11 +7,11 @@ Author: Joshua Wise
 class InMemoryStorage:
     """Lightweight non-persistent storage."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the empty dict."""
         self._store: dict[str, str] = {}
 
-    def save(self, key: str, json_string: str):
+    def save(self, key: str, json_string: str) -> None:
         """Save the string into memory."""
         self._store[key] = json_string
 

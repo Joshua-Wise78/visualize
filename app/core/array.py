@@ -79,11 +79,11 @@ class StaticArray[T](BoundsCheckMixin):
                 "Must pass at least value or index for contains."
             )
 
-        if value in self._data:
-            return True
+        if value is not None:
+            return any(val == value for val in self._data)
 
-        if index and self._data[index]:
-            return True
+        if index is not None and 0 <= index < len(self._data):
+            return self._data[index] is not None
 
         return False
 
